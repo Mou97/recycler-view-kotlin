@@ -75,9 +75,23 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
 
 //
     override fun onItemLongClicked(tweet: Tweet) {
-        tweets.remove(tweet)
-        Toast.makeText(applicationContext, tweets.size.toString(), Toast.LENGTH_LONG).show()
-        recyclerView.adapter?.notifyDataSetChanged()
+        val builder  = AlertDialog.Builder(this)
+        with (builder){
+            setTitle("Attention")
+            setMessage("Are you sure you want to delete this?")
+            setPositiveButton("Delete"){ dialog, which ->
+                tweets.remove(tweet)
+                recyclerView.adapter?.notifyDataSetChanged()
+            }
+            setNegativeButton("Cancel"){dialog, which ->
+                dialog.dismiss()
+            }
+            show()
+        }
+
+
+
+
 
 
 
