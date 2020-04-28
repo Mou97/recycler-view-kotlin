@@ -22,6 +22,10 @@ class myAdapter (val tweetsList: ArrayList<Tweet>, val itemClickListener: onItem
                 
                 return@setOnLongClickListener true
             }
+
+            itemView.setOnClickListener{
+                clickListener.onItemClicked(newTweet)
+            }
         }
 
     }
@@ -48,4 +52,5 @@ class myAdapter (val tweetsList: ArrayList<Tweet>, val itemClickListener: onItem
 
 interface  onItemClickListener {
     fun onItemLongClicked(tweet : Tweet)
+    fun onItemClicked(tweet: Tweet)
 }

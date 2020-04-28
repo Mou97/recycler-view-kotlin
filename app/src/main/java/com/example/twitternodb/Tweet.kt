@@ -1,3 +1,6 @@
 package com.example.twitternodb
 
-data class Tweet(val username : String, val tweet: String )
+import java.io.Serializable
+import java.util.*
+
+data class Tweet(val username : String, val tweet: String , val date : Date) : Serializable

@@ -1,6 +1,8 @@
 package com.example.twitternodb
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +13,20 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.edit_tweet.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class  MainActivity : AppCompatActivity() , onItemClickListener {
     val tweets = ArrayList<Tweet>()
+
+    // fragment management
+    private val fragmentManager = supportFragmentManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,16 +36,30 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
 
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL , false)
 
-        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah"))
-        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah22"))
-        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah22"))
-        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah22"))
-
-
+        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah", Date()))
 
         val adapter = myAdapter(tweets, this)
 
         recyclerView.adapter = adapter
+
+//        fragment
+        val orientation : Int =  resources.configuration.orientation
+
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        if(fragmentManager.findFragmentById(R.id.myFragment ) == null){
+
+            if( orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                fragmentTransaction.add(R.id.myFragment, DetailsFragment() )
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                fragmentTransaction.commit()
+            }
+
+        }
+
+
 
     }
 
@@ -60,7 +83,7 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
             builder.setPositiveButton("Add") { dialog, which ->
                 val newTweet = tweetText?.text.toString()
                 if(newTweet.isNotBlank()){
-                    tweets.add(Tweet("Elon Musk", newTweet))
+                    tweets.add(Tweet("Elon Musk", newTweet, Date()))
                 }else {
                     Toast.makeText(applicationContext, "Not a valid tweet", Toast.LENGTH_SHORT).show()
                 }
@@ -88,16 +111,25 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
             }
             show()
         }
+    }
+
+    override fun onItemClicked(tweet: Tweet) {
+        val orientation : Int =  resources.configuration.orientation
 
 
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+            val fragment : DetailsFragment= fragmentManager.findFragmentById(R.id.myFragment) as DetailsFragment
+            fragment.newInstance(tweet)
+
+        }else{
+            val intent = Intent(this, DetailsActivity::class.java)
+
+            intent.putExtra("Tweet",tweet)
+            startActivity(intent)
+        }
 
 
-
-
-
-
-}
-
+    }
 
 
 }
