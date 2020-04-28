@@ -10,22 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="Username Example"
 
         android:textAppearance="@style/TextAppearance.AppCompat.Large"></TextView>
+
     <TextView
         android:id="@+id/tweet"
-        android:text="tweet example..."
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"></TextView>
 
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="stuff" />
+        />
 
 </LinearLayout>

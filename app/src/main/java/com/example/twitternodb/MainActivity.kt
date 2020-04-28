@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -19,11 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.edit_tweet.*
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
 class  MainActivity : AppCompatActivity() , onItemClickListener {
-    val tweets = ArrayList<Tweet>()
+    var tweets = ArrayList<Tweet>()
 
     // fragment management
     private val fragmentManager = supportFragmentManager
@@ -34,9 +36,13 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        if(savedInstanceState!=null){
+            tweets = savedInstanceState.getSerializable("tweets") as ArrayList<Tweet>
+
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL , false)
 
-        tweets.add( Tweet("Elon Musk", "lorem ipsum blah blah", Date()))
 
         val adapter = myAdapter(tweets, this)
 
@@ -84,6 +90,7 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
                 val newTweet = tweetText?.text.toString()
                 if(newTweet.isNotBlank()){
                     tweets.add(Tweet("Elon Musk", newTweet, Date()))
+                    recyclerView.adapter?.notifyDataSetChanged()
                 }else {
                     Toast.makeText(applicationContext, "Not a valid tweet", Toast.LENGTH_SHORT).show()
                 }
@@ -131,5 +138,9 @@ class  MainActivity : AppCompatActivity() , onItemClickListener {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("tweets", tweets as Serializable)
+    }
 
 }
